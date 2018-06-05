@@ -13,6 +13,6 @@ public class CreateAssetBundles
             Directory.CreateDirectory(assetBundledirectory);
         }
 
-        BuildPipeline.BuildAssetBundles(assetBundledirectory, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows);
+        BuildPipeline.BuildAssetBundles(assetBundledirectory, BuildAssetBundleOptions.None, BuildTarget.WSAPlayer);
     }
 }

@@ -100,6 +100,11 @@ namespace HoloToolkit.Unity
 
         private void LogCallback(string message, string stack, LogType logType)
         {
+            if (message.Contains("camera"))
+            {
+                return;
+            }
+
             lock (logMessages)
             {
                 while (logMessages.Count > maxLogMessages)

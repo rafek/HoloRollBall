@@ -23,6 +23,7 @@ public class AppState : MonoBehaviour, IInputClickHandler
 
             if (angle <= 15.0f)
             {
+                Debug.Log("Instantiating Target prefab..");
                 Instantiate(_targetPrefab, focusDetails.Point, Quaternion.identity);
 
                 TargetCount = TargetCount - 1;
@@ -63,6 +64,8 @@ public class AppState : MonoBehaviour, IInputClickHandler
         string uri = "https://holorollball04.blob.core.windows.net/gamebundles/gametarget.hd";
 
         var request = UnityWebRequest.GetAssetBundle(uri, 0);
+
+        Debug.Log("Sending request..");
 
         yield return request.Send();
 
