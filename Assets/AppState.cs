@@ -1,14 +1,16 @@
 ﻿using HoloToolkit.Unity.InputModule;
 using HoloToolkit.Unity.SpatialMapping;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class AppState : MonoBehaviour, IInputClickHandler
 {
-    public GameObject TargetPrefab;
     public GameObject PlayerPrefab;
     public Material OcclusionMaterial;
     public int TargetCount;
 
+    private GameObject _targetPrefab;
     private bool _targetsPlaced = false;
     private bool _playerPlaced = false;
 
@@ -21,7 +23,7 @@ public class AppState : MonoBehaviour, IInputClickHandler
 
             if (angle <= 15.0f)
             {
-                Instantiate(TargetPrefab, focusDetails.Point, Quaternion.identity);
+                Instantiate(_targetPrefab, focusDetails.Point, Quaternion.identity);
 
                 TargetCount = TargetCount - 1;
             }
@@ -54,8 +56,20 @@ public class AppState : MonoBehaviour, IInputClickHandler
         eventData.Use();
     }
 
-    private void Start()
+    IEnumerator Start()
     {
         InputManager.Instance.AddGlobalListener(gameObject);
+
+        string uri = "https://holorollball04.blob.core.windows.net/gamebundles/gametarget.hd";
+
+        var request = UnityWebRequest.GetAssetBundle(uri, 0);
+
+        yield return request.Send();
+
+        var bundle = DownloadHandlerAssetBundle.GetContent(request);
+
+        _targetPrefab = bundle.LoadAsset<GameObject>("Target");
+
+        Debug.Log("TargetPrefab loaded.");
     }
 }
