@@ -17,13 +17,8 @@ public class PlayerBehaviour : MonoBehaviour, IHoldHandler
 
     public void OnHoldStarted(HoldEventData eventData)
     {
-        var focusDetails = FocusManager.Instance.GetFocusDetails(GazeManager.Instance);
-        var angle = Vector3.Angle(focusDetails.Normal, Vector3.up);
-
-        if (angle <= 15.0f)
-        {
-            _addForce = true;
-        }
+        Vector3 focusPoint;
+        _addForce = Utils.IsFloorPointed(out focusPoint);
     }
 
     private void Start()
@@ -35,15 +30,14 @@ public class PlayerBehaviour : MonoBehaviour, IHoldHandler
     {
         if (_addForce)
         {
-            var focusDetails = FocusManager.Instance.GetFocusDetails(GazeManager.Instance);
-            var angle = Vector3.Angle(focusDetails.Normal, Vector3.up);
+            Vector3 focusPoint;
 
-            if (angle <= 15.0f)
+            if (Utils.IsFloorPointed(out focusPoint))
             {
-                var focusPoint = new Vector3(focusDetails.Point.x, transform.position.y, focusDetails.Point.z);
+                var focusPointNorm = new Vector3(focusPoint.x, transform.position.y, focusPoint.z);
                 var playerPoint = transform.position;
 
-                gameObject.GetComponent<Rigidbody>().AddForce(focusPoint - playerPoint);
+                gameObject.GetComponent<Rigidbody>().AddForce(focusPointNorm - playerPoint);
             }
         }
     }

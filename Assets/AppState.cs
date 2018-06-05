@@ -16,15 +16,14 @@ public class AppState : MonoBehaviour, IInputClickHandler
 
     public void OnInputClicked(InputClickedEventData eventData)
     {
+        Vector3 focusPoint;
+
         if (!_targetsPlaced)
         {
-            var focusDetails = FocusManager.Instance.GetFocusDetails(GazeManager.Instance);
-            var angle = Vector3.Angle(focusDetails.Normal, Vector3.up);
-
-            if (angle <= 15.0f)
+            if (Utils.IsFloorPointed(out focusPoint))
             {
                 Debug.Log("Instantiating Target prefab..");
-                Instantiate(_targetPrefab, focusDetails.Point, Quaternion.identity);
+                Instantiate(_targetPrefab, focusPoint, Quaternion.identity);
 
                 TargetCount = TargetCount - 1;
             }
@@ -39,12 +38,9 @@ public class AppState : MonoBehaviour, IInputClickHandler
         }
         else if (!_playerPlaced)
         {
-            var focusDetails = FocusManager.Instance.GetFocusDetails(GazeManager.Instance);
-            var angle = Vector3.Angle(focusDetails.Normal, Vector3.up);
-
-            if (angle <= 15.0f)
+            if (Utils.IsFloorPointed(out focusPoint))
             {
-                Instantiate(PlayerPrefab, focusDetails.Point + Vector3.up * .3f, Quaternion.identity);
+                Instantiate(PlayerPrefab, focusPoint + Vector3.up * .3f, Quaternion.identity);
 
                 _playerPlaced = true;
 
